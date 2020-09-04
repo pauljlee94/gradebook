@@ -13,7 +13,6 @@
       </span>
     </div>
     <div class="mt-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-      <!-- Replace with your content -->
       <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <li v-for="course in courses" :key="course.id" class="flex flex-col justify-between py-6 px-10 col-span-1 bg-white rounded-lg shadow">
           <div class="flex justify-between">
@@ -47,8 +46,6 @@
           </div>
         </li>
       </ul>
-
-      <!-- /End replace -->
     </div>
     <!-- Modal -->
     <div v-if="!!addCourseModal" class="fixed z-10 inset-0 overflow-y-auto">
@@ -329,7 +326,6 @@ export default {
     return {
       addCourseModal: false,
       addGradeModal: false,
-      originalTeacher: null,
       gradeCourse: null,
       newGrade: {
         name: null,
@@ -377,51 +373,24 @@ export default {
       })
 
     for (const course of courses) {
-      if (!!course.teacher) {
-        let teacher = await db
-          .collection("teachers")
-          .doc(course.teacher)
-          .get()
-          .then((teacher) => {
-            return { ...teacher.data(), id: teacher.id }
+      let grades = []
+      await db
+        .collection("courses")
+        .doc(course.id)
+        .collection("grades")
+        .get()
+        .then((snapshot) => {
+          snapshot.docs.forEach((doc) => {
+            let grade = {
+              ...doc.data(),
+            }
+            grades.push(grade)
           })
-        course.teacher = teacher
-      } else {
-        course.teacher = {}
-      }
+        })
+      course.grades = grades
     }
 
-    let grades = []
-    await db
-      .collection("grades")
-      .get()
-      .then((snapshot) => {
-        snapshot.docs.forEach((doc) => {
-          let course = {
-            ...doc.data(),
-          }
-          grades.push(course)
-        })
-      })
-
-    var weights = []
-    for (const course of courses) {
-      course.weightBreakdown.forEach((breakdown) => {
-        var typedGrade = grades.filter((grade) => {
-          return grade.type == breakdown.name
-        })
-        var average =
-          typedGrade.reduce((a, b) => {
-            return a + parseFloat(b.grade)
-          }, 0) / typedGrade.length
-
-        weights.push(average * (breakdown.weight / 100))
-      })
-      var weightedGrade = weights.reduce((a, b) => a + b, 0)
-      course.weightedGrade = weightedGrade
-    }
-
-    return { courses: courses, grades: grades }
+    return { courses: courses }
   },
 
   mounted() {},
@@ -441,65 +410,27 @@ export default {
         .reduce((a, b) => a + b, 0)
 
       var courseData = {
-        name: this.newCourse.name,
-        weightBreakdown: this.newCourse.weightBreakdown,
+        ...this.newCourse,
         active: false,
       }
 
       if (totalWeight === 100) {
-        if (
-          !!this.newCourse.teacher.name ||
-          !!this.newCourse.teacher.email ||
-          !!this.newCourse.teacher.phone
-        ) {
-          db.collection("teachers")
-            .add(this.newCourse.teacher)
-            .then((teacher) => {
-              db.collection("courses")
-                .add({
-                  ...courseData,
-                  teacher: teacher.id,
-                })
-                .then((course) => {
-                  this.addCourseModal = false
-                  this.actions.form.error = false
-                  this.courses.push({
-                    ...courseData,
-                    id: course.id,
-                    teacher: teacher.id,
-                    grade: null,
-                  })
-                })
-                .catch((error) => {
-                  this.actions.form.error = error
-                })
-            })
-            .catch((error) => {
-              this.actions.form.error = error
-            })
-        } else {
-          db.collection("courses")
-            .add({
+        db.collection("courses")
+          .add(courseData)
+          .then((course) => {
+            // Frontend
+            this.courses.push({
               ...courseData,
-              teacher: null,
+              id: course.id,
+              grades: [],
             })
-            .then((course) => {
-              this.addCourseModal = false
-              this.actions.form.error = false
-              this.courses.push({
-                ...courseData,
-                id: course.id,
-                teacher: {
-                  name: null,
-                  email: null,
-                  phone: null,
-                },
-              })
-            })
-            .catch((error) => {
-              this.actions.form.error = error
-            })
-        }
+
+            this.addCourseModal = false
+            this.actions.form.error = false
+          })
+          .catch((error) => {
+            this.actions.form.error = error
+          })
       } else {
         this.actions.form.error = "The weight doesn't add up to 100%"
       }
@@ -512,57 +443,43 @@ export default {
         .reduce((a, b) => a + b, 0)
 
       var courseData = {
-        name: this.newCourse.name,
-        weightBreakdown: this.newCourse.weightBreakdown,
-        active: this.newCourse.active,
+        ...this.newCourse,
       }
 
-      if (totalWeight === 100) {
-        if (
-          JSON.stringify(this.newCourse.teacher) ==
-          JSON.stringify(this.originalTeacher)
-        ) {
-          db.collection("courses")
-            .doc(this.newCourse.id)
-            .update({
-              ...courseData,
-              teacher: this.newCourse.teacher.id,
-            })
-            .then(() => {
-              this.addCourseModal = false
-              this.actions.form.error = false
-            })
-            .catch((error) => {
-              this.actions.form.error = error
-            })
-        } else {
-          if (this.newCourse.teacher.id)
-            db.collection("teachers").doc(this.newCourse.teacher.id).delete()
+      delete courseData.id
 
-          db.collection("teachers")
-            .add(this.newCourse.teacher)
-            .then((teacher) => {
+      if (totalWeight === 100) {
+        db.collection("courses")
+          .doc(this.newCourse.id)
+          .update(courseData)
+          .then(() => {
+            this.addCourseModal = false
+            this.actions.form.error = false
+          })
+          .catch((error) => {
+            this.actions.form.error = error
+          })
+      } else {
+        this.actions.form.error = "The weight doesn't add up to 100%"
+      }
+    },
+
+    deleteCourse() {
+      db.collection("courses")
+        .doc(this.newCourse.id)
+        .collection("grades")
+        .get()
+        .then((results) => {
+          results.forEach((result) => {
+            result.ref.delete().then(() => {
               db.collection("courses")
                 .doc(this.newCourse.id)
-                .update({
-                  ...courseData,
-                  teacher: teacher.id,
-                })
+                .delete()
                 .then(() => {
-                  console.log(this.courses)
-                  console.log(this.newCourse.id)
-
                   var index = this.courses.findIndex((course) => {
                     return course.id === this.newCourse.id
                   })
-
-                  this.courses[index].teacher.id = teacher.id
-
-                  // this.courses.push({
-                  //   ...courseData,
-                  //   id: course.id,
-                  //   teacher: teacher.id,
-                  // })
+                  this.courses.splice(index, 1)
                   this.addCourseModal = false
                   this.actions.form.error = false
                 })
@@ -570,68 +487,68 @@ export default {
                   this.actions.form.error = error
                 })
             })
-            .catch((error) => {
-              this.actions.form.error = error
-            })
-        }
-      } else {
-        this.actions.form.error = "The weight doesn't add up to 100%"
-      }
-    },
-
-    deleteCourse() {
-      if (this.newCourse.teacher.id) {
-        db.collection("teachers")
-          .doc(this.newCourse.teacher.id)
-          .delete()
-          .then(() => {
-            db.collection("courses")
-              .doc(this.newCourse.id)
-              .delete()
-              .then(() => {
-                var index = this.courses.findIndex((course) => {
-                  return course.id === this.newCourse.id
-                })
-                this.courses.spliace(index, 1)
-                this.addCourseModal = false
-                this.actions.form.error = false
-              })
-              .catch((error) => {
-                this.actions.form.error = error
-              })
           })
-          .catch((error) => {
-            this.actions.form.error = error
-          })
-      } else {
-        db.collection("courses")
-          .doc(this.newCourse.id)
-          .delete()
-          .then(() => {
-            var index = this.courses.findIndex((course) => {
-              return course.id === this.newCourse.id
-            })
-            this.courses.splice(index, 1)
-            this.addCourseModal = false
-            this.actions.form.error = false
-          })
-          .catch((error) => {
-            this.actions.form.error = error
-          })
-      }
-    },
-
-    addGrade(course) {
-      db.collection("grades")
-        .add({
-          ...this.newGrade,
-          course: this.gradeCourse.id,
         })
-        .then((grade) => {
+    },
+
+    addGrade() {
+      var newGrade = {
+        ...this.newGrade,
+        // course: this.gradeCourse.id,
+      }
+
+      db.collection("courses")
+        .doc(this.gradeCourse.id)
+        .collection("grades")
+        .add(newGrade)
+        .then(() => {
+          this.gradeCourse.grades.push(newGrade)
+
+          // TODO: Calculate weighted grade here
+          let points = []
+          let weights = []
+          let totalWeight = 0
+
+          this.gradeCourse.weightBreakdown.forEach((breakdown) => {
+            let typedGrade = this.gradeCourse.grades.filter((grade) => {
+              return grade.type == breakdown.name
+            })
+
+            typedGrade.length !== 0 ? (totalWeight += breakdown.weight) : null
+          })
+
+          this.gradeCourse.weightBreakdown.forEach((breakdown) => {
+            let typedGrade = this.gradeCourse.grades.filter((grade) => {
+              return grade.type == breakdown.name
+            })
+
+            let average = typedGrade.reduce((a, b) => {
+              return a + parseFloat(b.grade)
+            }, 0)
+
+            let weightedPoints =
+              typedGrade.length > 0
+                ? (average / typedGrade.length) *
+                  (breakdown.weight / totalWeight)
+                : 0
+
+            weights.push(weightedPoints)
+          })
+
+          // SAVE THIS
+          let weightedGrade = weights.reduce((a, b) => a + b, 0)
+
+          this.gradeCourse.weightedGrade = weightedGrade
+
+          db.collection("courses")
+            .doc(this.gradeCourse.id)
+            .update({weightedGrade: weightedGrade})
+
           this.addGradeModal = false
           this.actions.form.error = false
         })
         .catch((error) => {
+          console.log(error)
           this.actions.form.error = error
         })
     },

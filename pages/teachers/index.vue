@@ -18,7 +18,7 @@
             <div class="flex-1 truncate">
               <div class="flex items-center space-x-3">
                 <h3 class="text-gray-900 text-sm leading-5 font-medium truncate">{{teacher.name}}</h3>
-                <span class="flex-shrink-0 inline-block px-2 py-0.5 text-teal-800 text-xs leading-4 font-medium bg-teal-100 rounded-full">Admin</span>
+                <!-- <span class="flex-shrink-0 inline-block px-2 py-0.5 text-teal-800 text-xs leading-4 font-medium bg-teal-100 rounded-full">Admin</span> -->
               </div>
               <p class="mt-1 text-gray-500 text-sm leading-5 truncate">{{teacher.email}}</p>
               <p class="mt-1 text-gray-500 text-sm leading-5 truncate">{{teacher.phone}}</p>
@@ -69,17 +69,17 @@ import { db } from "~/plugins/firebase.js"
 
 export default {
   async asyncData() {
-    let teachers = []
+   let teachers = []
     await db
-      .collection("teachers")
+      .collection("courses")
       .get()
       .then((snapshot) => {
         snapshot.docs.forEach((doc) => {
-          let teacher = {
+          let course = {
             ...doc.data(),
             id: doc.id,
           }
-          teachers.push(teacher)
+          teachers.push(course.teacher)
         })
       })
 
