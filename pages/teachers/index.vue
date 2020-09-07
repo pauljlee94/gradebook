@@ -56,18 +56,19 @@
 import { db } from "~/plugins/firebase.js"
 
 export default {
-  async asyncData() {
+  async asyncData({ store }) {
     let teachers = []
     await db
       .collection("courses")
+      .where("user", "==", store.state.modules.user.user.uid)
       .get()
       .then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           let teacher = {
             ...doc.data().teacher,
-            course: doc.data().name
+            course: doc.data().name,
           }
-          if(!!teacher.name || !!teacher.email || !!teacher.phone)
+          if (!!teacher.name || !!teacher.email || !!teacher.phone)
             teachers.push(teacher)
         })
       })

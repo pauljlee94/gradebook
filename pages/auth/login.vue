@@ -11,7 +11,7 @@
           <h2 class="mt-6 text-3xl leading-9 font-bold text-gray-900">Sign in to your account</h2>
           <p class="mt-2 text-sm leading-5 text-gray-600 max-w">
             Or
-            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">start your 14-day free trial</a>
+            <nuxt-link to="/auth/signup" href="#" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">sign up for a free account</nuxt-link>
           </p>
         </div>
 

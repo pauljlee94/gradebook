@@ -34,9 +34,11 @@
           </div>
           <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
             <div class="flex-shrink-0 flex items-center px-4">
-              <h1 class="text-2xl font-medium text-white">
-                <i class="fas fa-book mr-3"></i>Gradebook
-              </h1>
+              <nuxt-link to="/">
+                <h1 class="text-2xl font-medium text-white">
+                  <i class="fas fa-book mr-3"></i>Gradebook
+                </h1>
+              </nuxt-link>
             </div>
             <nav class="mt-5 px-2 space-y-1">
               <nuxt-link
@@ -94,9 +96,11 @@
         <div class="flex flex-col h-0 flex-1 bg-gray-800">
           <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
             <div class="flex items-center flex-shrink-0 px-4">
-              <h1 class="text-2xl font-medium text-white">
-                <i class="fas fa-book mr-3"></i>Gradebook
-              </h1>
+              <nuxt-link to="/">
+                <h1 class="text-2xl font-medium text-white">
+                  <i class="fas fa-book mr-3"></i>Gradebook
+                </h1>
+              </nuxt-link>
             </div>
             <!-- REVIEW: Border here??? -->
             <nav class="mt-5 flex-1 px-2 bg-gray-800 space-y-1 border-t border-gray-700 pt-4">
@@ -164,8 +168,6 @@
 <script>
 import { auth } from "~/plugins/firebase.js"
 import { mapGetters, mapActions } from "vuex"
-    
-
 
 export default {
   data() {
