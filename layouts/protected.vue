@@ -1,37 +1,35 @@
 <template>
   <div class="h-screen flex overflow-hidden bg-gray-100">
     <!-- Off-canvas menu for mobile -->
-    <div class="md:hidden">
+    <div v-if="mobileMenuOpen" class="md:hidden">
       <div class="fixed inset-0 flex z-40">
         <!--
-        Off-canvas menu overlay, show/hide based on off-canvas menu state.
+      Off-canvas menu overlay, show/hide based on off-canvas menu state.
 
-        Entering: "transition-opacity ease-linear duration-300"
-          From: "opacity-0"
-          To: "opacity-100"
-        Leaving: "transition-opacity ease-linear duration-300"
-          From: "opacity-100"
-          To: "opacity-0"
+      Entering: "transition-opacity ease-linear duration-300"
+        From: "opacity-0"
+        To: "opacity-100"
+      Leaving: "transition-opacity ease-linear duration-300"
+        From: "opacity-100"
+        To: "opacity-0"
         -->
-        <div class="fixed inset-0">
+        <div @click="mobileMenuOpen = false" class="fixed inset-0">
           <div class="absolute inset-0 bg-gray-600 opacity-75"></div>
         </div>
         <!--
-        Off-canvas menu, show/hide based on off-canvas menu state.
+      Off-canvas menu, show/hide based on off-canvas menu state.
 
-        Entering: "transition ease-in-out duration-300 transform"
-          From: "-translate-x-full"
-          To: "translate-x-0"
-        Leaving: "transition ease-in-out duration-300 transform"
-          From: "translate-x-0"
-          To: "-translate-x-full"
+      Entering: "transition ease-in-out duration-300 transform"
+        From: "-translate-x-full"
+        To: "translate-x-0"
+      Leaving: "transition ease-in-out duration-300 transform"
+        From: "translate-x-0"
+        To: "-translate-x-full"
         -->
         <div class="relative flex-1 flex flex-col max-w-xs w-full bg-gray-800">
           <div class="absolute top-0 right-0 -mr-14 p-1">
-            <button class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-600" aria-label="Close sidebar">
-              <svg class="h-6 w-6 text-white" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+            <button @click="mobileMenuOpen = false" class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-600" aria-label="Close sidebar">
+              <i class="fas fa-times fa-lg text-gray-100"></i>
             </button>
           </div>
           <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
@@ -60,7 +58,7 @@
                 to="/teachers"
                 class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition ease-in-out duration-150"
               >
-                <i class="fas fa-book-open mr-3"></i>
+                <i class="fas fa-chalkboard-teacher mr-3"></i>
                 Teachers
               </nuxt-link>
               <nuxt-link
@@ -100,10 +98,11 @@
                 <i class="fas fa-book mr-3"></i>Gradebook
               </h1>
             </div>
-            <nav class="mt-5 flex-1 px-2 bg-gray-800 space-y-1">
+            <!-- REVIEW: Border here??? -->
+            <nav class="mt-5 flex-1 px-2 bg-gray-800 space-y-1 border-t border-gray-700 pt-4">
               <nuxt-link
                 to="/dashboard"
-                class="group flex items-center px-2 py-2 text-sm leading-5 font-medium text-white rounded-md bg-gray-900 focus:outline-none focus:bg-gray-700 transition ease-in-out duration-150"
+                :class="[$nuxt.$route.name.includes('dashboard') ? 'text-white bg-gray-900' : 'text-gray-300 hover:bg-gray-700', 'group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md transition ease-in-out duration-150']"
               >
                 <i class="fas fa-home mr-3"></i>
                 Dashboard
@@ -111,21 +110,21 @@
 
               <nuxt-link
                 to="/courses"
-                class="group flex items-center px-2 py-2 text-sm leading-5 font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition ease-in-out duration-150"
+                :class="[$nuxt.$route.name.includes('courses') ? 'text-white bg-gray-900' : 'text-gray-300 hover:bg-gray-700', 'group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md transition ease-in-out duration-150']"
               >
                 <i class="fas fa-book-open mr-3"></i>
                 Courses
               </nuxt-link>
               <nuxt-link
                 to="/teachers"
-                class="group flex items-center px-2 py-2 text-sm leading-5 font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition ease-in-out duration-150"
+                :class="[$nuxt.$route.name.includes('teachers') ? 'text-white bg-gray-900' : 'text-gray-300 hover:bg-gray-700', 'group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md transition ease-in-out duration-150']"
               >
                 <i class="fas fa-chalkboard-teacher mr-3"></i>
                 Teachers
               </nuxt-link>
               <nuxt-link
                 to="/calendar"
-                class="group flex items-center px-2 py-2 text-sm leading-5 font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition ease-in-out duration-150"
+                :class="[$nuxt.$route.name.includes('calendar') ? 'text-white bg-gray-900' : 'text-gray-300 hover:bg-gray-700', 'group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md transition ease-in-out duration-150']"
               >
                 <i class="fas fa-calendar-alt mr-3"></i>
                 Calendar
@@ -138,6 +137,7 @@
                 <div class="ml-3">
                   <p class="text-sm leading-5 font-medium text-white">Tom Cook</p>
                   <p class="text-xs leading-4 font-medium text-gray-300 group-hover:text-gray-200 transition ease-in-out duration-150">View profile</p>
+                  <button @click="logOut">Sign Out</button>
                 </div>
               </div>
             </a>
@@ -148,12 +148,11 @@
     <div class="flex flex-col w-0 flex-1 overflow-hidden">
       <div class="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
         <button
+          @click="mobileMenuOpen = true"
           class="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:bg-gray-200 transition ease-in-out duration-150"
           aria-label="Open sidebar"
         >
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <i class="fas fa-bars fa-lg"></i>
         </button>
       </div>
       <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none" tabindex="0">
@@ -164,5 +163,32 @@
 </template>
 
 <script>
-export default {}
+import { auth } from "~/plugins/firebase.js"
+import { mapGetters, mapActions } from "vuex"
+    
+
+
+export default {
+  data() {
+    return {
+      mobileMenuOpen: false,
+    }
+  },
+
+  computed: {
+    ...mapGetters("modules/user", ["user"]),
+  },
+
+  methods: {
+    ...mapActions("modules/user", ["signout"]),
+
+    logOut() {
+      this.signout().then(() => {
+        this.$router.push({ path: "/auth/login" })
+      })
+    },
+  },
+
+  middleware: ["authenticated"],
+}
 </script>

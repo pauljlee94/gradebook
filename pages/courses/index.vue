@@ -15,10 +15,10 @@
     <div class="mt-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
       <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <li v-for="course in courses" :key="course.id" class="flex flex-col justify-between py-6 px-10 col-span-1 bg-white rounded-lg shadow">
+          <!-- <nuxt-link :to="'/course/' + course.id"> -->
           <div class="flex justify-between">
             <div>
               <h2 class="text-xl font-bold text-gray-700">{{course.name}}</h2>
-              <p>{{course.weightedGrade}}</p>
               <p v-if="course.teacher" class="text-gray-500 text-sm">{{course.teacher.name}}</p>
               <p v-if="course.teacher" class="text-gray-500 text-sm">{{course.teacher.email}}</p>
               <p v-if="course.teacher" class="text-gray-500 text-sm">{{course.teacher.phone}}</p>
@@ -34,16 +34,24 @@
               <span aria-hidden="true" :class="{'translate-x-4': course.active}" class="inline-block h-5 w-5 rounded-full bg-white shadow transform transition ease-in-out duration-200"></span>
             </span>
           </div>
-          <div class="flex flex-col self-end">
+
+          <div class="flex justify-between items-end">
             <div>
-              <button @click="addCourseModal = 'edit'; newCourse = course; originalTeacher = {...course.teacher}" class="mt-6 border border-indigo-600 rounded-full shadow h-10 w-10 text-indigo-600">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button @click="addGradeModal = !addGradeModal; gradeCourse = course" class="ml-2 mt-6 border border-transparent bg-indigo-600 rounded-full shadow h-10 w-10 text-white">
+              <span
+                v-if="course.weightedGrade"
+                :class="[course.weightedGrade <= 33 ? 'text-red-500' : course.weightedGrade >= 66 ? 'text-green-500' : 'text-orange-400' ,'text-3xl font-bold']"
+              >{{course.weightedGrade}}%</span>
+            </div>
+            <div class="flex mt-6">
+              <nuxt-link :to="`/courses/${course.id}`" class="flex justify-center items-center text-center inline-block border border-indigo-600 rounded-full shadow h-10 w-10 text-indigo-600">
+                <i class="fas fa-stream"></i>
+              </nuxt-link>
+              <button @click="addGradeModal = !addGradeModal; gradeCourse = course" class="ml-2 border border-transparent bg-indigo-600 rounded-full shadow h-10 w-10 text-white">
                 <i class="fas fa-plus"></i>
               </button>
             </div>
           </div>
+          <!-- </nuxt-link> -->
         </li>
       </ul>
     </div>
@@ -86,15 +94,6 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           <div class="flex justify-between border-b items-center pb-3">
             <h2 v-if="addCourseModal === 'add'" id="modal-title" class="text-xl font-semibold text-gray-900">Add a course</h2>
             <h2 v-else id="modal-title" class="text-xl font-semibold text-gray-900">Edit course</h2>
-            <span v-if="addCourseModal === 'edit'" class="inline-flex rounded-md shadow-sm">
-              <button
-                @click="deleteCourse"
-                type="button"
-                class="inline-flex items-center px-4 py-1 border border-transparent text-sm leading-6 rounded-md text-white bg-red-500 hover:bg-red-400 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
-              >
-                <i class="fas fa-trash-alt mr-2"></i>Delete
-              </button>
-            </span>
           </div>
           <form class="mt-4" @submit.prevent>
             <div class="grid grid-cols-6 gap-4">
@@ -209,12 +208,6 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                   type="submit"
                   class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 >Add Course</button>
-                <button
-                  @click="editCourse"
-                  v-else
-                  type="submit"
-                  class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
-                >Save Changes</button>
               </span>
             </div>
             <p v-if="actions.form.error" class="mt-2 text-red-500 text-xs">The weight doesn't add up to 100%</p>
@@ -297,7 +290,7 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             <div class="flex mt-5 sm:mt-6 space-x-4 border-t pt-4">
               <span class="flex w-full rounded-md shadow-sm">
                 <button
-                  @click="addGradeModal = false; newCourse =  {name: null,teacher: {name: null,email: null,phone: null}, weightBreakdown: [{name: null,weight: null,}]}"
+                  @click="addGradeModal = false; newGrade =  {name: null,type: null,grade: null}"
                   type="button"
                   class="inline-flex justify-center w-full rounded-md border border-red-500 px-4 py-2 bg-white text-base leading-6 font-medium text-red-500 shadow-sm hover:bg-red-500 hover:text-white focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 >Cancel</button>
@@ -320,6 +313,7 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
 
 <script>
 import { db } from "~/plugins/firebase.js"
+import { mapGetters, mapActions } from "vuex"
 
 export default {
   data() {
@@ -357,10 +351,15 @@ export default {
     }
   },
 
-  async asyncData() {
+  computed: {
+    ...mapGetters("modules/user", ["user"]),
+  },
+
+  async asyncData({ store }) {
     let courses = []
     await db
       .collection("courses")
+      .where("user", "==", store.state.modules.user.user.uid)
       .get()
       .then((snapshot) => {
         snapshot.docs.forEach((doc) => {
@@ -393,8 +392,6 @@ export default {
     return { courses: courses }
   },
 
-  mounted() {},
-
   methods: {
     activateCourse(course) {
       db.collection("courses").doc(course.id).update({
@@ -412,6 +409,7 @@ export default {
       var courseData = {
         ...this.newCourse,
         active: false,
+        user: this.user.uid,
       }
 
       if (totalWeight === 100) {
@@ -434,61 +432,6 @@ export default {
       } else {
         this.actions.form.error = "The weight doesn't add up to 100%"
       }
-    },
-    editCourse() {
-      var totalWeight = this.newCourse.weightBreakdown
-        .map((breakdown) => {
-          return breakdown.weight
-        }, 0)
-        .reduce((a, b) => a + b, 0)
-
-      var courseData = {
-        ...this.newCourse,
-      }
-
-      delete courseData.id
-
-      if (totalWeight === 100) {
-        db.collection("courses")
-          .doc(this.newCourse.id)
-          .update(courseData)
-          .then(() => {
-            this.addCourseModal = false
-            this.actions.form.error = false
-          })
-          .catch((error) => {
-            this.actions.form.error = error
-          })
-      } else {
-        this.actions.form.error = "The weight doesn't add up to 100%"
-      }
-    },
-
-    deleteCourse() {
-      db.collection("courses")
-        .doc(this.newCourse.id)
-        .collection("grades")
-        .get()
-        .then((results) => {
-          results.forEach((result) => {
-            result.ref.delete().then(() => {
-              db.collection("courses")
-                .doc(this.newCourse.id)
-                .delete()
-                .then(() => {
-                  var index = this.courses.findIndex((course) => {
-                    return course.id === this.newCourse.id
-                  })
-                  this.courses.splice(index, 1)
-                  this.addCourseModal = false
-                  this.actions.form.error = false
-                })
-                .catch((error) => {
-                  this.actions.form.error = error
-                })
-            })
-          })
-        })
     },
 
     addGrade() {
@@ -542,7 +485,7 @@ export default {
 
           db.collection("courses")
             .doc(this.gradeCourse.id)
-            .update({weightedGrade: weightedGrade})
+            .update({ weightedGrade: weightedGrade })
 
           this.addGradeModal = false
           this.actions.form.error = false

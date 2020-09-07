@@ -5,20 +5,49 @@
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
       <!-- Replace with your content -->
-      <div class="py-4">
-        <div class="border-4 border-dashed border-gray-200 rounded-lg h-96"></div>
-      </div>
+      <pre>{{totalAverage}}</pre>
       <!-- /End replace -->
     </div>
   </div>
 </template>
 
 <script>
+import { db } from "~/plugins/firebase.js"
+
 export default {
+  async asyncData({ store }) {
+    let courses = []
+    await db
+      .collection("courses")
+      .where("user", "==", store.state.modules.user.user.uid)
+      .get()
+      .then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          if (doc.data().active) {
+            let course = {
+              ...doc.data(),
+              id: doc.id,
+            }
+            courses.push(course)
+          }
+        })
+      })
+    return { courses: courses }
+  },
+
+  computed: {
+    totalAverage() {
+      var gradedCourses = this.courses.filter((course) => {
+        return course.weightedGrade !== undefined
+      })
+
+      return gradedCourses.reduce((a, b) => {
+        return a + b.weightedGrade
+      }, 0) / gradedCourses.length
+    },
+  },
+
+  mounted() {},
   layout: "protected",
 }
 </script>
-
-<style lang="scss" scoped>
-</style>
-

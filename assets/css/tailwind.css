@@ -1,3 +1,11 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+.success {
+	@apply bg-green-500;
+}
+
+.error {
+	@apply bg-red-500;
+}
