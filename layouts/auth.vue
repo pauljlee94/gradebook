@@ -10,3 +10,11 @@
     </div>
   </div>
 </template>
+
+
+
+<script>
+export default {
+  middleware: ["checkAuthenticated"],
+}
+</script>
