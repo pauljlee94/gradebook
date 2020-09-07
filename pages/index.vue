@@ -41,14 +41,6 @@
 import { db } from "~/plugins/firebase.js"
 
 export default {
-  asyncData() {
-    db.collection("users")
-      .doc("aQtOz3I3qCRmMM2lv9jy6EG4hAq1")
-      .get()
-      .then((result) => {
-        console.log(result.data())
-      })
-  },
   layout: "default",
 }
 </script>

@@ -193,6 +193,7 @@
                 </div>
                 <div :class="[index > 0 ? 'mt-3' : 'mt-1', 'col-span-2 relative']">
                   <input
+                    @input="actions.editCourse.error = false"
                     class="form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                     placeholder="25"
                     aria-label="percentage"
@@ -216,7 +217,7 @@
             </span>
             <div class="flex mt-5 sm:mt-6 space-x-4 border-t pt-4 justify-between items-center">
               <p class="text-red-500 text-sm">
-                <span v-if="actions.form.error">{{actions.form.error}}</span>
+                <span v-if="actions.editCourse.error">{{actions.editCourse.error}}</span>
               </p>
               <div class="flex space-x-2">
                 <span class="flex rounded-md shadow-sm">
@@ -224,8 +225,9 @@
                     @click="editCourse"
                     type="submit"
                     class="inline-flex justify-center items-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                    :class="{'success': actions.editCourse.success, 'danger': actions.editCourse.error}"
                   >
-                    <i class="fas fa-save mr-2"></i>Save
+                    <i :class="[actions.editCourse.loading ? 'fa-circle-notch fa-spin' : 'fa-save','fas mr-2']"></i>Save
                   </button>
                 </span>
               </div>
@@ -337,7 +339,7 @@
               <button
                 @click="deleteCourse"
                 type="button"
-                class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-500 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-400 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5"
               >Delete</button>
             </span>
             <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
@@ -481,6 +483,11 @@ export default {
           error: false,
           success: false,
         },
+        editCourse: {
+          loading: false,
+          error: false,
+          success: false,
+        },
       },
     }
   },
@@ -519,6 +526,7 @@ export default {
 
   methods: {
     editCourse() {
+      this.actions.editCourse.loading = true
       var totalWeight = this.course.weightBreakdown
         .map((breakdown) => {
           return breakdown.weight
@@ -537,18 +545,21 @@ export default {
           .update(courseData)
           .then(() => {
             this.addCourseModal = false
-            this.actions.form.error = false
+            this.actions.editCourse.error = false
+            this.actions.editCourse.loading = false
+            this.actions.editCourse.success = true
           })
           .catch((error) => {
-            this.actions.form.error = error
+            this.actions.editCourse.loading = false
+            this.actions.editCourse.error = error
           })
       } else {
-        this.actions.form.error = "The weight doesn't add up to 100%"
+        this.actions.editCourse.loading = false
+        this.actions.editCourse.error = "The weight doesn't add up to 100%"
       }
     },
 
     deleteCourse() {
-      console.log("deleting")
       this.actions.form.loading = true
 
       db.collection("courses")

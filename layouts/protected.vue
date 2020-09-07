@@ -135,9 +135,8 @@
             <a href="#" class="flex-shrink-0 w-full group block">
               <div class="flex items-center">
                 <div class="ml-3">
-                  <p class="text-sm leading-5 font-medium text-white">Tom Cook</p>
-                  <p class="text-xs leading-4 font-medium text-gray-300 group-hover:text-gray-200 transition ease-in-out duration-150">View profile</p>
-                  <button @click="logOut">Sign Out</button>
+                  <p class="text-sm leading-5 font-medium text-white">{{user.name}}</p>
+                  <button @click="logOut" class="text-sm text-red-500">Sign Out</button>
                 </div>
               </div>
             </a>

@@ -6,6 +6,6 @@
 	@apply bg-green-500;
 }
 
-.error {
+.danger {
 	@apply bg-red-500;
 }
