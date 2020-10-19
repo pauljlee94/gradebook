@@ -23,7 +23,7 @@
                 <p
                   :key="index"
                   v-if="new Date(props.day.date).getFullYear() === new Date(event.date).getFullYear() && new Date(props.day.date).getMonth() ===  new Date(event.date).getMonth() && new Date(props.day.date).getDate() ===  new Date(event.date).getDate()"
-                  class="px-2 py- rounded-lg text-sm text-white bg-blue-600"
+                  class="px-2 py- rounded-lg text-sm text-white"
                   :class="{'bg-red-400': event.type === 'Exam','bg-green-500': event.type === 'Homework','bg-orange-500': event.type === 'Project', 'bg-indigo-600': event.type === 'Participation'}"
                 >{{event.name}}</p>
               </template>

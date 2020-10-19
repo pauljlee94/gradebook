@@ -5,7 +5,7 @@
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
       <!-- Replace with your content -->
-      <pre>{{totalAverage}}</pre>
+      <pre>{{totalAverage.toFixed(1)}}</pre>
       <!-- /End replace -->
     </div>
   </div>
@@ -23,13 +23,13 @@ export default {
       .get()
       .then((snapshot) => {
         snapshot.docs.forEach((doc) => {
-          if (doc.data().active) {
+          // if (doc.data().active) {
             let course = {
               ...doc.data(),
               id: doc.id,
             }
             courses.push(course)
-          }
+          // }
         })
       })
     return { courses: courses }

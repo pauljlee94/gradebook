@@ -18,8 +18,9 @@
     </div>
     <div class="flex mt-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 space-x-6">
       <div class="flex flex-col space-y-6">
-        <div class="bg-white rounded-lg shadow py-6 px-10">
+        <div v-if="course.weightedGrade" class="bg-white rounded-lg shadow py-6 px-10">
           <span
+            
             :class="[
               course.weightedGrade <= 33
                 ? 'text-red-500'
@@ -28,23 +29,8 @@
                 : 'text-orange-400',
             ]"
             class="text-2xl font-semibold text-gray-900"
-            >{{ course.weightedGrade }}%</span
+            >{{ course.weightedGrade.toFixed(1) }}%</span
           >
-          <h3 class="text-sm font-medium leading-5 text-gray-700">
-            In order to get a
-            <input
-              type="number"
-              class="form-input w-16 py-2 px-2 mx-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-              placeholder="90"
-            />
-            you need:
-          </h3>
-          <div
-            v-for="breakdown in course.weightBreakdown"
-            :key="breakdown.name"
-          >
-            {{ breakdown.name }} {{breakdown.weight}}
-          </div>
         </div>
         <div class="bg-white rounded-lg shadow py-6 px-10">
           <div class="flex justify-between max-w-7xl mx-auto<div">

@@ -40,7 +40,7 @@
               <span
                 v-if="course.weightedGrade"
                 :class="[course.weightedGrade <= 33 ? 'text-red-500' : course.weightedGrade >= 66 ? 'text-green-500' : 'text-orange-400' ,'text-3xl font-bold']"
-              >{{course.weightedGrade}}%</span>
+              >{{course.weightedGrade.toFixed(1)}}%</span>
             </div>
             <div class="flex mt-6">
               <nuxt-link :to="`/courses/${course.id}`" class="flex justify-center items-center text-center inline-block border border-blue-600 rounded-full shadow h-10 w-10 text-blue-600">
@@ -437,6 +437,7 @@ export default {
     addGrade() {
       var newGrade = {
         ...this.newGrade,
+        timestamp: new Date()
         // course: this.gradeCourse.id,
       }
 
