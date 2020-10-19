@@ -6,7 +6,7 @@
         <button
           @click="eventModal = 'add'; addEditEvent = {name: null, course: null, type: null, date: null}"
           type="button"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition ease-in-out duration-150"
         >
           <i class="fas fa-plus mr-2"></i>Add Event
         </button>
@@ -23,8 +23,8 @@
                 <p
                   :key="index"
                   v-if="new Date(props.day.date).getFullYear() === new Date(event.date).getFullYear() && new Date(props.day.date).getMonth() ===  new Date(event.date).getMonth() && new Date(props.day.date).getDate() ===  new Date(event.date).getDate()"
-                  class="px-2 py- rounded-lg text-sm text-white"
-                  :class="{'bg-red-400': event.type === 'Exam','bg-blue-500': event.type === 'Homework','bg-orange-500': event.type === 'Project' }"
+                  class="px-2 py- rounded-lg text-sm text-white bg-blue-600"
+                  :class="{'bg-red-400': event.type === 'Exam','bg-green-500': event.type === 'Homework','bg-orange-500': event.type === 'Project', 'bg-indigo-600': event.type === 'Participation'}"
                 >{{event.name}}</p>
               </template>
             </div>
@@ -38,7 +38,7 @@
             <button @click="eventModal ='edit'; addEditEvent = event" class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out">
               <div class="px-4 py-4 sm:px-6">
                 <div class="flex items-center justify-between">
-                  <div class="text-sm leading-5 font-medium text-indigo-600 truncate">{{event.name}}</div>
+                  <div class="text-sm leading-5 font-medium text-blue-600 truncate">{{event.name}}</div>
                   <div class="ml-2 flex-shrink-0 flex">
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{event.type}}</span>
                   </div>
@@ -53,7 +53,7 @@
                   <div class="mt-2 flex items-center text-sm leading-5 text-gray-500 sm:mt-0">
                     <i class="fas fa-calendar-alt mr-1"></i>
                     <span>
-                      <time datetime="2020-01-07">January 7, 2020</time>
+                      <time datetime="2020-01-07">{{`${new Date(event.date).getMonth() + 1}/${new Date(event.date).getDate()}/${new Date(event.date).getFullYear()}`}}</time>
                     </span>
                   </div>
                 </div>
@@ -101,12 +101,12 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         >
           <!-- Form -->
           <div class="flex justify-between border-b items-center pb-3">
-            <h2 id="modal-title" class="text-xl font-semibold text-gray-900">{{addEditEvent === 'add' ? 'Add' : 'Edit'}} Event</h2>
+            <h2 id="modal-title" class="text-xl font-semibold text-gray-900">{{eventModal === 'add' ? 'Add' : 'Edit'}} Event</h2>
             <span v-if="eventModal === 'edit'" class="inline-flex rounded-md shadow-sm">
               <button
                 @click="deleteEvent"
                 type="button"
-                class="inline-flex items-center px-4 py-1 border border-red-500 text-sm leading-6 rounded-md text-red-500 bg-white hover:bg-red-500 hover:text-white focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
+                class="inline-flex items-center px-4 py-1 border border-red-500 text-sm leading-6 rounded-md text-red-500 bg-white hover:bg-red-500 hover:text-white focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition ease-in-out duration-150"
               >
                 <i class="fas fa-trash-alt mr-2"></i>Delete Event
               </button>
@@ -147,9 +147,19 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     <option>Exam</option>
                     <option>Homework</option>
                     <option>Project</option>
-                    <option value="misc">Miscellaneous</option>
+                    <option>Participation</option>
+                    <option value="other">Other</option>
                   </select>
                 </div>
+              </div>
+              <div v-if="addEditEvent.type == 'other'" class="col-span-6">
+                <label for="eventOther" class="block text-sm font-medium leading-5 text-gray-700">Type</label>
+                <input
+                  v-model="addEditEvent.other"
+                  id="eventOther"
+                  class="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  placeholder="Exam"
+                />
               </div>
               <div class="col-span-6">
                 <label for="date" class="block text-sm font-medium leading-5 text-gray-700">Date</label>
@@ -162,15 +172,15 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 <button
                   @click="eventModal = false"
                   type="button"
-                  class="inline-flex justify-center w-full rounded-md border border-red-500 px-4 py-2 bg-white text-base leading-6 font-medium text-red-500 shadow-sm hover:bg-red-500 hover:text-white focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                  class="inline-flex justify-center w-full rounded-md border border-red-500 px-4 py-2 bg-white text-base leading-6 font-medium text-red-500 shadow-sm hover:bg-red-500 hover:text-white focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 >Cancel</button>
               </span>
               <span class="flex w-full rounded-md shadow-sm">
                 <button
-                  @click="addEditEvent === 'add' ? addEvent() : editEvent()"
+                  @click="eventModal === 'add' ? addEvent() : editEvent()"
                   type="submit"
-                  class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
-                >{{addEditEvent === 'add' ? 'Add Event' : 'Save Changes'}}</button>
+                  class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                >{{eventModal === 'add' ? 'Add Event' : 'Save Changes'}}</button>
               </span>
             </div>
             <!-- <p v-if="actions.form.error" class="mt-2 text-red-500 text-xs">The weight doesn't add up to 100%</p> -->
@@ -194,6 +204,7 @@ export default {
         course: null,
         type: null,
         date: null,
+        other: null
       },
     }
   },
@@ -246,8 +257,19 @@ export default {
 
   methods: {
     addEvent() {
-      let cleanEvent = {
-        ...this.addEditEvent,
+      let cleanEvent
+
+      if(this.addEditEvent.type !== 'other') {
+        cleanEvent = {
+          ...this.addEditEvent,
+        }
+      } else {
+        cleanEvent = {
+          name: this.addEditEvent.name,
+          course: this.addEditEvent.course,
+          type: this.addEditEvent.other,
+          date: this.addEditEvent.date,
+        }
       }
 
       db.collection("calendars")
@@ -262,8 +284,19 @@ export default {
     },
 
     editEvent() {
-      let cleanEvent = {
-        ...this.addEditEvent
+      let cleanEvent
+
+      if(this.addEditEvent.type !== 'other') {
+        cleanEvent = {
+          ...this.addEditEvent,
+        }
+      } else {
+        cleanEvent = {
+          name: this.addEditEvent.name,
+          course: this.addEditEvent.course,
+          type: this.addEditEvent.other,
+          date: this.addEditEvent.date,
+        }
       }
 
       delete cleanEvent.id

@@ -6,7 +6,7 @@
         <button
           @click="addCourseModal = 'add'"
           type="button"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition ease-in-out duration-150"
         >
           <i class="fas fa-plus mr-2"></i>Add Course
         </button>
@@ -28,7 +28,7 @@
               role="checkbox"
               tabindex="0"
               aria-checked="false"
-              :class="{'bg-indigo-600': course.active}"
+              :class="{'bg-blue-600': course.active}"
               class="bg-gray-200 relative inline-flex flex-shrink-0 h-6 w-10 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:shadow-outline"
             >
               <span aria-hidden="true" :class="{'translate-x-4': course.active}" class="inline-block h-5 w-5 rounded-full bg-white shadow transform transition ease-in-out duration-200"></span>
@@ -43,10 +43,10 @@
               >{{course.weightedGrade}}%</span>
             </div>
             <div class="flex mt-6">
-              <nuxt-link :to="`/courses/${course.id}`" class="flex justify-center items-center text-center inline-block border border-indigo-600 rounded-full shadow h-10 w-10 text-indigo-600">
+              <nuxt-link :to="`/courses/${course.id}`" class="flex justify-center items-center text-center inline-block border border-blue-600 rounded-full shadow h-10 w-10 text-blue-600">
                 <i class="fas fa-stream"></i>
               </nuxt-link>
-              <button @click="addGradeModal = !addGradeModal; gradeCourse = course" class="ml-2 border border-transparent bg-indigo-600 rounded-full shadow h-10 w-10 text-white">
+              <button @click="addGradeModal = !addGradeModal; gradeCourse = course" class="ml-2 border border-transparent bg-blue-600 rounded-full shadow h-10 w-10 text-white">
                 <i class="fas fa-plus"></i>
               </button>
             </div>
@@ -127,7 +127,7 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             <button
               @click="newTeacher = true"
               type="button"
-              class="w-full rounded-md border border-indigo-600 px-4 py-2 bg-white text-base leading-6 font-medium text-indigo-600 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+              class="w-full rounded-md border border-blue-600 px-4 py-2 bg-white text-base leading-6 font-medium text-blue-600 shadow-sm hover:bg-blue-500 hover:text-white focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
             >
               <i class="fas fa-plus mr-2"></i>Add Teacher
             </button>
@@ -185,7 +185,7 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                   <button
                     @click="newCourse.weightBreakdown.push({name: null, weight: null})"
                     type="button"
-                    class="w-full rounded-md border border-indigo-600 px-4 py-2 bg-white text-base leading-6 font-medium text-indigo-600 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                    class="w-full rounded-md border border-blue-600 px-4 py-2 bg-white text-base leading-6 font-medium text-blue-600 shadow-sm hover:bg-blue-500 hover:text-white focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                   >
                     <i class="fas fa-plus mr-2"></i>Add Breakdown
                   </button>
@@ -198,7 +198,7 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 <button
                   @click="addCourseModal = false; newCourse =  {name: null,teacher: {name: null,email: null,phone: null}, weightBreakdown: [{name: null,weight: null,}]}"
                   type="button"
-                  class="inline-flex justify-center w-full rounded-md border border-red-500 px-4 py-2 bg-white text-base leading-6 font-medium text-red-500 shadow-sm hover:bg-red-500 hover:text-white focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                  class="inline-flex justify-center w-full rounded-md border border-red-500 px-4 py-2 bg-white text-base leading-6 font-medium text-red-500 shadow-sm hover:bg-red-500 hover:text-white focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 >Cancel</button>
               </span>
               <span class="flex w-full rounded-md shadow-sm">
@@ -206,7 +206,7 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                   @click="saveCourse"
                   v-if="addCourseModal === 'add'"
                   type="submit"
-                  class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                  class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 >Add Course</button>
               </span>
             </div>
@@ -292,14 +292,14 @@ To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 <button
                   @click="addGradeModal = false; newGrade =  {name: null,type: null,grade: null}"
                   type="button"
-                  class="inline-flex justify-center w-full rounded-md border border-red-500 px-4 py-2 bg-white text-base leading-6 font-medium text-red-500 shadow-sm hover:bg-red-500 hover:text-white focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                  class="inline-flex justify-center w-full rounded-md border border-red-500 px-4 py-2 bg-white text-base leading-6 font-medium text-red-500 shadow-sm hover:bg-red-500 hover:text-white focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 >Cancel</button>
               </span>
               <span class="flex w-full rounded-md shadow-sm">
                 <button
                   @click="addGrade"
                   type="submit"
-                  class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                  class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 >Add Grade</button>
               </span>
             </div>

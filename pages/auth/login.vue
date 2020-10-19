@@ -3,7 +3,7 @@
     <div class="mx-auto w-full max-w-sm lg:w-96">
       <div>
         <nuxt-link to="/">
-          <h1 class="text-4xl font-extrabold text-blue-800">
+          <h1 class="text-4xl font-extrabold text-blue-600">
             <i class="fas fa-book mr-3"></i>Gradebook
           </h1>
         </nuxt-link>
@@ -13,7 +13,7 @@
           <nuxt-link
             to="/auth/signup"
             href="#"
-            class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150"
+            class="font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150"
           >sign up for a free account</nuxt-link>
         </p>
       </div>
@@ -49,12 +49,12 @@
 
             <div class="flex items-center justify-between">
               <div class="flex items-center">
-                <input v-model="rememberMe" id="remember_me" type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" />
+                <input v-model="rememberMe" id="remember_me" type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out" />
                 <label for="remember_me" class="ml-2 block text-sm leading-5 text-gray-900">Remember me</label>
               </div>
 
               <div class="text-sm leading-5">
-                <nuxt-link to="/auth/forgot-password" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">Forgot your password?</nuxt-link>
+                <nuxt-link to="/auth/forgot-password" class="font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150">Forgot your password?</nuxt-link>
               </div>
             </div>
 
@@ -62,7 +62,7 @@
               <span class="block w-full rounded-md shadow-sm">
                 <button
                   type="submit"
-                  class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
                 >Sign in</button>
               </span>
               <p v-if="actions.form.error" class="mt-4 text-red-500 text-sm">{{actions.form.error}}</p>
